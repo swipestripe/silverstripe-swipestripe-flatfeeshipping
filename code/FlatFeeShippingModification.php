@@ -59,11 +59,21 @@ class FlatFeeShippingModification extends Modification {
 
     if ($rates && $rates->exists()) {
 
-    	$field = FlatFeeShippingModifierField_Multiple::create(
-        $this,
-        $rate->Title,
-        $rates->map('ID', 'Label')->toArray()
-      )->setValue($rate->ID);
+    	if ($rates->count() > 1) {
+    		$field = FlatFeeShippingModifierField_Multiple::create(
+	        $this,
+	        _t('FlatFeeShippingModification.FIELD_LABEL', 'Shipping'),
+	        $rates->map('ID', 'Label')->toArray()
+	      )->setValue($rate->ID);
+    	}
+    	else {
+    		$newRate = $rates->first();
+    		$field = FlatFeeShippingModifierField::create(
+    	    $this,
+    	  	$newRate->Title,
+    	  	$newRate->ID
+    	  )->setAmount($newRate->Price());
+    	}
 
       $fields->push($field);
     }

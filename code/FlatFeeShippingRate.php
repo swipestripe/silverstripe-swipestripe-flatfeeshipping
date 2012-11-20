@@ -137,6 +137,11 @@ class FlatFeeShippingRate_Admin extends ShopAdmin {
     'ShopConfig/FlatFeeShipping' => 'FlatFeeShippingSettings'
   );
 
+  public function init() {
+		parent::init();
+		$this->modelClass = 'ShopConfig';
+	}
+
   public function Breadcrumbs($unlinked = false) {
 
     $request = $this->getRequest();
