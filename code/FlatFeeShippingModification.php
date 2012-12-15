@@ -18,8 +18,11 @@ class FlatFeeShippingModification extends Modification {
 		//Get valid rates for this order
 		$rates = null;
 
-    $address = $order->ShippingAddress();
-    $countryID = ($address && $address->exists()) ? $address->CountryID : null;
+    $country = Country_Shipping::get()
+    	->where("\"Code\" = '" . $order->ShippingCountryCode . "'")
+    	->first();
+    $countryID = ($country && $country->exists()) ? $country->ID : null;
+
     $rates = ($countryID) 
     	? $rates = FlatFeeShippingRate::get()->where("\"CountryID\" = '$countryID'")
     	: null;

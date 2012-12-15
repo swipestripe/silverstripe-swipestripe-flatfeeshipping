@@ -1,16 +1,8 @@
 <?php
-/**
- * Default settings.
- * 
- * @author Frank Mullenger <frankmullenger@gmail.com>
- * @copyright Copyright (c) 2011, Frank Mullenger
- * @package swipestripe
- * @subpackage admin
- */
 
 //Extensions
 Object::add_extension('ShopConfig', 'FlatFeeShippingRate_Extension');
-Object::add_extension('CheckoutPage_Controller', 'FlatFeeShippingModifierField_Extension');
+Object::add_extension('OrderForm', 'FlatFeeShippingModifierField_Extension');
 
 if (class_exists('ExchangeRate_Extension')) {
 	Object::add_extension('FlatFeeShippingRate', 'ExchangeRate_Extension');

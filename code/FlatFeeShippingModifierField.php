@@ -7,7 +7,7 @@
  * @package swipestripe
  * @subpackage shipping
  */
-class FlatFeeShippingModifierField extends ModifierHiddenField {
+class FlatFeeShippingModifierField extends ModificationField_Hidden {
 	
   /**
    * The amount this field represents e.g: 15% * order subtotal
@@ -22,7 +22,7 @@ class FlatFeeShippingModifierField extends ModifierHiddenField {
    * @see FormField::FieldHolder()
    * @return String
    */
-  function FieldHolder() {
+  function FieldHolder($properties = array()) {
     Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
     Requirements::javascript('swipestripe-flatfeeshipping/javascript/FlatFeeShippingModifierField.js');
     return $this->renderWith($this->template);
@@ -50,7 +50,6 @@ class FlatFeeShippingModifierField extends ModifierHiddenField {
   /**
    * Shipping field modifies {@link Order} sub total by default.
    * 
-   * @see ModifierSetField::modifiesSubTotal()
    * @return Boolean True
    */
   function modifiesSubTotal() {
@@ -58,7 +57,7 @@ class FlatFeeShippingModifierField extends ModifierHiddenField {
   }
 }
 
-class FlatFeeShippingModifierField_Multiple extends ModifierSetField {
+class FlatFeeShippingModifierField_Multiple extends ModificationField_Dropdown {
   
   /**
    * The amount this field represents e.g: 15% * order subtotal
@@ -73,7 +72,7 @@ class FlatFeeShippingModifierField_Multiple extends ModifierSetField {
    * @see FormField::FieldHolder()
    * @return String
    */
-  function FieldHolder() {
+  function FieldHolder($properties = array()) {
     Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
     Requirements::javascript('swipestripe-flatfeeshipping/javascript/FlatFeeShippingModifierField.js');
     return $this->renderWith($this->template);
@@ -101,7 +100,7 @@ class FlatFeeShippingModifierField_Multiple extends ModifierSetField {
   /**
    * Shipping field modifies {@link Order} sub total by default.
    * 
-   * @see ModifierSetField::modifiesSubTotal()
+   * @see ModificationField_Dropdown::modifiesSubTotal()
    * @return Boolean True
    */
   function modifiesSubTotal() {
@@ -111,8 +110,9 @@ class FlatFeeShippingModifierField_Multiple extends ModifierSetField {
 
 class FlatFeeShippingModifierField_Extension extends Extension {
 
-  public function updateOrderForm($form) {
-    Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+	public function updateFields($fields) {
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+    Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
     Requirements::javascript('swipestripe-flatfeeshipping/javascript/FlatFeeShippingModifierField.js');
-  }
+	}
 }
