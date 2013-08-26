@@ -49,7 +49,7 @@ class FlatFeeShippingRate extends DataObject {
 
     return new FieldList(
       $rootTab = new TabSet('Root',
-        $tabMain = new Tab('TaxRate',
+        $tabMain = new Tab('ShippingRate',
           TextField::create('Title', _t('FlatFeeShippingRate.TITLE', 'Title')),
           TextField::create('Description', _t('FlatFeeShippingRate.DESCRIPTION', 'Description')),
           DropdownField::create('CountryID', _t('FlatFeeShippingRate.COUNTRY', 'Country'), Country_Shipping::get()->map()->toArray()),
@@ -206,7 +206,7 @@ class FlatFeeShippingRate_Admin extends ShopAdmin {
     );
 
     $actions = new FieldList();
-    $actions->push(FormAction::create('saveTaxSettings', _t('GridFieldDetailForm.Save', 'Save'))
+    $actions->push(FormAction::create('saveFlatFeeShippingSettings', _t('GridFieldDetailForm.Save', 'Save'))
       ->setUseButtonTag(true)
       ->addExtraClass('ss-ui-action-constructive')
       ->setAttribute('data-icon', 'add'));
