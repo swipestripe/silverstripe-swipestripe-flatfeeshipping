@@ -15,50 +15,49 @@ class FlatFeeShippingModification extends Modification {
 
 	public function add($order, $value = null) {
 
-		//Get valid rates for this order
-		$rates = null;
+        $country = Country_Shipping::get()
+            ->filter("Code",$order->ShippingCountryCode)
+            ->first();
+		
+        $rates = $this->getFlatShippingRates($country);
 
-    $country = Country_Shipping::get()
-    	->where("\"Code\" = '" . $order->ShippingCountryCode . "'")
-    	->first();
-    $countryID = ($country && $country->exists()) ? $country->ID : null;
+        if ($rates && $rates->exists()) {
 
-    $rates = ($countryID) 
-    	? $rates = FlatFeeShippingRate::get()->where("\"CountryID\" = '$countryID'")
-    	: null;
+        	//Pick the rate
+        	$rate = $rates->find('ID', $value);
 
-    if ($rates && $rates->exists()) {
+        	if (!$rate || !$rate->exists()) {
+        		$rate = $rates->first();
+        	}
 
-    	//Pick the rate
-    	$rate = $rates->find('ID', $value);
+        	//Generate the Modification now that we have picked the correct rate
+        	$mod = new FlatFeeShippingModification();
 
-    	if (!$rate || !$rate->exists()) {
-    		$rate = $rates->first();
-    	}
+        	$mod->Price = $rate->Amount()->getAmount();
 
-    	//Generate the Modification now that we have picked the correct rate
-    	$mod = new FlatFeeShippingModification();
-
-    	$mod->Price = $rate->Amount()->getAmount();
-
-    	$mod->Description = $rate->Description;
-    	$mod->OrderID = $order->ID;
-    	$mod->Value = $rate->ID;
-    	$mod->FlatFeeShippingRateID = $rate->ID;
-    	$mod->write();
-    }
+        	$mod->Description = $rate->Description;
+        	$mod->OrderID = $order->ID;
+        	$mod->Value = $rate->ID;
+        	$mod->FlatFeeShippingRateID = $rate->ID;
+        	$mod->write();
+        }
 	}
+
+    function getFlatShippingRates(Country_Shipping $country) {
+        //Get valid rates for this country
+        $countryID = ($country && $country->exists()) ? $country->ID : null;
+        $rates = FlatFeeShippingRate::get()->filter("CountryID", $countryID);
+        $this->extend("updateFlatShippingRates", $rates, $country);
+        return $rates;
+    }
 
 	public function getFormFields() {
 
 		$fields = new FieldList();
 
 		$rate = $this->FlatFeeShippingRate();
-		$countryID = ($rate && $rate->exists()) ? $rate->CountryID : null;
 
-		$rates = ($countryID) 
-    	? $rates = FlatFeeShippingRate::get()->where("\"CountryID\" = '$countryID'")
-    	: null;
+        $rates = $this->getFlatShippingRates($rate->Country());
 
     if ($rates && $rates->exists()) {
 
