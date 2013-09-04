@@ -15,6 +15,8 @@ class FlatFeeShippingModification extends Modification {
 
 	public function add($order, $value = null) {
 
+        $this->OrderID = $order->ID;
+
         $country = Country_Shipping::get()
             ->filter("Code",$order->ShippingCountryCode)
             ->first();
