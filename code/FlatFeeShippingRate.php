@@ -51,7 +51,8 @@ class FlatFeeShippingRate extends DataObject {
 			$rootTab = new TabSet('Root',
 				$tabMain = new Tab('ShippingRate',
 					TextField::create('Title', _t('FlatFeeShippingRate.TITLE', 'Title')),
-					TextField::create('Description', _t('FlatFeeShippingRate.DESCRIPTION', 'Description')),
+					TextField::create('Description', _t('FlatFeeShippingRate.DESCRIPTION', 'Description'))
+						->setRightTitle('Label used in checkout form.'),
 					DropdownField::create('CountryID', _t('FlatFeeShippingRate.COUNTRY', 'Country'), Country_Shipping::get()->map()->toArray()),
 					PriceField::create('Price')
 				)
