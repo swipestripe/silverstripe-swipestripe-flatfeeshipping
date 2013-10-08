@@ -15,7 +15,7 @@ class FlatFeeShippingRate extends DataObject {
 	 * 
 	 * @var Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar',
 		'Description' => 'Varchar',
 		'Price' => 'Decimal(19,4)'
@@ -28,12 +28,12 @@ class FlatFeeShippingRate extends DataObject {
 	 * 
 	 * @var unknown_type
 	 */
-	static $has_one = array(
+	private static $has_one = array(
 		'ShopConfig' => 'ShopConfig',
 		'Country' => 'Country_Shipping'
 	);
 
-	static $summary_fields = array(
+	private static $summary_fields = array(
 		'Title' => 'Title',
 		'Description' => 'Description',
 		'SummaryOfPrice' => 'Amount',
@@ -120,7 +120,7 @@ class FlatFeeShippingRate_Extension extends DataExtension {
 	 * 
 	 * @see DataObjectDecorator::extraStatics()
 	 */
-	public static $has_many = array(
+	private static $has_many = array(
 		'FlatFeeShippingRates' => 'FlatFeeShippingRate'
 	);
 
@@ -128,11 +128,19 @@ class FlatFeeShippingRate_Extension extends DataExtension {
 
 class FlatFeeShippingRate_Admin extends ShopAdmin {
 
-	static $url_rule = 'ShopConfig/FlatFeeShipping';
-	static $url_priority = 110;
-	static $menu_title = 'Shop Flat Fee Shipping Rates';
+	private static $tree_class = 'ShopConfig';
+	
+	private static $allowed_actions = array(
+		'FlatFeeShippingSettings',
+		'FlatFeeShippingSettingsForm',
+		'saveFlatFeeShippingSettings'
+	);
 
-	public static $url_handlers = array(
+	private static $url_rule = 'ShopConfig/FlatFeeShipping';
+	protected static $url_priority = 110;
+	private static $menu_title = 'Shop Flat Fee Shipping Rates';
+
+	private static $url_handlers = array(
 		'ShopConfig/FlatFeeShipping/FlatFeeShippingSettingsForm' => 'FlatFeeShippingSettingsForm',
 		'ShopConfig/FlatFeeShipping' => 'FlatFeeShippingSettings'
 	);

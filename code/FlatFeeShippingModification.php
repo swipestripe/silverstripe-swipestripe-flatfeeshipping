@@ -2,16 +2,16 @@
 
 class FlatFeeShippingModification extends Modification {
 
-	public static $has_one = array(
+	private static $has_one = array(
 		'FlatFeeShippingRate' => 'FlatFeeShippingRate'
 	);
 
-	public static $defaults = array(
+	private static $defaults = array(
 		'SubTotalModifier' => true,
 		'SortOrder' => 50
 	);
 
-	public static $default_sort = 'SortOrder ASC';
+	private static $default_sort = 'SortOrder ASC';
 
 	public function add($order, $value = null) {
 
