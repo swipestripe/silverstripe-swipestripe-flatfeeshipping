@@ -9,16 +9,16 @@
  * @subpackage shipping
  */
 class FlatFeeShippingRate extends DataObject {
-  
-  /**
-   * Fields for this tax rate
-   * 
-   * @var Array
-   */
-  public static $db = array(
-    'Title' => 'Varchar',
-    'Description' => 'Varchar',
-  	'Price' => 'Decimal(19,4)'
+	
+	/**
+	 * Fields for this tax rate
+	 * 
+	 * @var Array
+	 */
+	public static $db = array(
+		'Title' => 'Varchar',
+		'Description' => 'Varchar',
+		'Price' => 'Decimal(19,4)'
 	);
 	
 	/**
@@ -29,79 +29,79 @@ class FlatFeeShippingRate extends DataObject {
 	 * @var unknown_type
 	 */
 	static $has_one = array(
-    'ShopConfig' => 'ShopConfig',
-	  'Country' => 'Country_Shipping'
-  );
+		'ShopConfig' => 'ShopConfig',
+		'Country' => 'Country_Shipping'
+	);
 
-  static $summary_fields = array(
-    'Title' => 'Title',
-    'Description' => 'Description',
-    'SummaryOfPrice' => 'Amount',
-    'Country.Title' => 'Country'
-  );
+	static $summary_fields = array(
+		'Title' => 'Title',
+		'Description' => 'Description',
+		'SummaryOfPrice' => 'Amount',
+		'Country.Title' => 'Country'
+	);
 	
-  /**
-   * Field for editing a {@link FlatFeeShippingRate}.
-   * 
-   * @return FieldSet
-   */
-  public function getCMSFields() {
+	/**
+	 * Field for editing a {@link FlatFeeShippingRate}.
+	 * 
+	 * @return FieldSet
+	 */
+	public function getCMSFields() {
 
-    return new FieldList(
-      $rootTab = new TabSet('Root',
-        $tabMain = new Tab('ShippingRate',
-          TextField::create('Title', _t('FlatFeeShippingRate.TITLE', 'Title')),
-          TextField::create('Description', _t('FlatFeeShippingRate.DESCRIPTION', 'Description')),
-          DropdownField::create('CountryID', _t('FlatFeeShippingRate.COUNTRY', 'Country'), Country_Shipping::get()->map()->toArray()),
-          PriceField::create('Price')
-        )
-      )
-    );
-  }
-  
-  /**
-   * Label for using on {@link FlatFeeShippingModifierField}s.
-   * 
-   * @see FlatFeeShippingModifierField
-   * @return String
-   */
-  public function Label() {
-    return $this->Description . ' - ' . $this->Price()->Nice();
-  }
-  
-  /**
-   * Summary of the current tax rate
-   * 
-   * @return String
-   */
-  public function SummaryOfPrice() {
-    return $this->Amount()->Nice();
-  }
+		return new FieldList(
+			$rootTab = new TabSet('Root',
+				$tabMain = new Tab('ShippingRate',
+					TextField::create('Title', _t('FlatFeeShippingRate.TITLE', 'Title')),
+					TextField::create('Description', _t('FlatFeeShippingRate.DESCRIPTION', 'Description')),
+					DropdownField::create('CountryID', _t('FlatFeeShippingRate.COUNTRY', 'Country'), Country_Shipping::get()->map()->toArray()),
+					PriceField::create('Price')
+				)
+			)
+		);
+	}
+	
+	/**
+	 * Label for using on {@link FlatFeeShippingModifierField}s.
+	 * 
+	 * @see FlatFeeShippingModifierField
+	 * @return String
+	 */
+	public function Label() {
+		return $this->Description . ' - ' . $this->Price()->Nice();
+	}
+	
+	/**
+	 * Summary of the current tax rate
+	 * 
+	 * @return String
+	 */
+	public function SummaryOfPrice() {
+		return $this->Amount()->Nice();
+	}
 
-  public function Amount() {
+	public function Amount() {
 
-    // TODO: Multi currency
+		// TODO: Multi currency
 
-    $shopConfig = ShopConfig::current_shop_config();
+		$shopConfig = ShopConfig::current_shop_config();
 
-  	$amount = new Price();
-  	$amount->setAmount($this->Price);
-    $amount->setCurrency($shopConfig->BaseCurrency);
-    $amount->setSymbol($shopConfig->BaseCurrencySymbol);
-    return $amount;
-  }
+		$amount = new Price();
+		$amount->setAmount($this->Price);
+		$amount->setCurrency($shopConfig->BaseCurrency);
+		$amount->setSymbol($shopConfig->BaseCurrencySymbol);
+		return $amount;
+	}
 
-  /**
-   * Display price, can decorate for multiple currency etc.
-   * 
-   * @return Price
-   */
-  public function Price() {
-    
-    $amount = $this->Amount();
-    $this->extend('updatePrice', $amount);
-    return $amount;
-  }
+	/**
+	 * Display price, can decorate for multiple currency etc.
+	 * 
+	 * @return Price
+	 */
+	public function Price() {
+		
+		$amount = $this->Amount();
+		$this->extend('updatePrice', $amount);
+		return $amount;
+	}
 	
 }
 
@@ -115,163 +115,163 @@ class FlatFeeShippingRate extends DataObject {
  */
 class FlatFeeShippingRate_Extension extends DataExtension {
 
-  /**
-   * Attach {@link FlatFeeShippingRate}s to {@link SiteConfig}.
-   * 
-   * @see DataObjectDecorator::extraStatics()
-   */
-  public static $has_many = array(
-    'FlatFeeShippingRates' => 'FlatFeeShippingRate'
-  );
+	/**
+	 * Attach {@link FlatFeeShippingRate}s to {@link SiteConfig}.
+	 * 
+	 * @see DataObjectDecorator::extraStatics()
+	 */
+	public static $has_many = array(
+		'FlatFeeShippingRates' => 'FlatFeeShippingRate'
+	);
 
 }
 
 class FlatFeeShippingRate_Admin extends ShopAdmin {
 
-  static $url_rule = 'ShopConfig/FlatFeeShipping';
-  static $url_priority = 110;
-  static $menu_title = 'Shop Flat Fee Shipping Rates';
+	static $url_rule = 'ShopConfig/FlatFeeShipping';
+	static $url_priority = 110;
+	static $menu_title = 'Shop Flat Fee Shipping Rates';
 
-  public static $url_handlers = array(
-    'ShopConfig/FlatFeeShipping/FlatFeeShippingSettingsForm' => 'FlatFeeShippingSettingsForm',
-    'ShopConfig/FlatFeeShipping' => 'FlatFeeShippingSettings'
-  );
+	public static $url_handlers = array(
+		'ShopConfig/FlatFeeShipping/FlatFeeShippingSettingsForm' => 'FlatFeeShippingSettingsForm',
+		'ShopConfig/FlatFeeShipping' => 'FlatFeeShippingSettings'
+	);
 
-  public function init() {
+	public function init() {
 		parent::init();
 		$this->modelClass = 'ShopConfig';
 	}
 
-  public function Breadcrumbs($unlinked = false) {
+	public function Breadcrumbs($unlinked = false) {
 
-    $request = $this->getRequest();
-    $items = parent::Breadcrumbs($unlinked);
+		$request = $this->getRequest();
+		$items = parent::Breadcrumbs($unlinked);
 
-    if ($items->count() > 1) $items->remove($items->pop());
+		if ($items->count() > 1) $items->remove($items->pop());
 
-    $items->push(new ArrayData(array(
-      'Title' => 'Flat Fee Shipping',
-      'Link' => $this->Link(Controller::join_links($this->sanitiseClassName($this->modelClass), 'FlatFeeShipping'))
-    )));
+		$items->push(new ArrayData(array(
+			'Title' => 'Flat Fee Shipping',
+			'Link' => $this->Link(Controller::join_links($this->sanitiseClassName($this->modelClass), 'FlatFeeShipping'))
+		)));
 
-    return $items;
-  }
+		return $items;
+	}
 
-  public function SettingsForm($request = null) {
-    return $this->FlatFeeShippingSettingsForm();
-  }
+	public function SettingsForm($request = null) {
+		return $this->FlatFeeShippingSettingsForm();
+	}
 
-  public function FlatFeeShippingSettings($request) {
+	public function FlatFeeShippingSettings($request) {
 
-    if ($request->isAjax()) {
-      $controller = $this;
-      $responseNegotiator = new PjaxResponseNegotiator(
-        array(
-          'CurrentForm' => function() use(&$controller) {
-            return $controller->FlatFeeShippingSettingsForm()->forTemplate();
-          },
-          'Content' => function() use(&$controller) {
-            return $controller->renderWith('ShopAdminSettings_Content');
-          },
-          'Breadcrumbs' => function() use (&$controller) {
-            return $controller->renderWith('CMSBreadcrumbs');
-          },
-          'default' => function() use(&$controller) {
-            return $controller->renderWith($controller->getViewer('show'));
-          }
-        ),
-        $this->response
-      ); 
-      return $responseNegotiator->respond($this->getRequest());
-    }
+		if ($request->isAjax()) {
+			$controller = $this;
+			$responseNegotiator = new PjaxResponseNegotiator(
+				array(
+					'CurrentForm' => function() use(&$controller) {
+						return $controller->FlatFeeShippingSettingsForm()->forTemplate();
+					},
+					'Content' => function() use(&$controller) {
+						return $controller->renderWith('ShopAdminSettings_Content');
+					},
+					'Breadcrumbs' => function() use (&$controller) {
+						return $controller->renderWith('CMSBreadcrumbs');
+					},
+					'default' => function() use(&$controller) {
+						return $controller->renderWith($controller->getViewer('show'));
+					}
+				),
+				$this->response
+			); 
+			return $responseNegotiator->respond($this->getRequest());
+		}
 
-    return $this->renderWith('ShopAdminSettings');
-  }
+		return $this->renderWith('ShopAdminSettings');
+	}
 
-  public function FlatFeeShippingSettingsForm() {
+	public function FlatFeeShippingSettingsForm() {
 
-    $shopConfig = ShopConfig::get()->First();
+		$shopConfig = ShopConfig::get()->First();
 
-    $fields = new FieldList(
-      $rootTab = new TabSet('Root',
-        $tabMain = new Tab('Shipping',
-          GridField::create(
-            'FlatFeeShippingRates',
-            'FlatFeeShippingRates',
-            $shopConfig->FlatFeeShippingRates(),
-            GridFieldConfig_HasManyRelationEditor::create()
-          )
-        )
-      )
-    );
+		$fields = new FieldList(
+			$rootTab = new TabSet('Root',
+				$tabMain = new Tab('Shipping',
+					GridField::create(
+						'FlatFeeShippingRates',
+						'FlatFeeShippingRates',
+						$shopConfig->FlatFeeShippingRates(),
+						GridFieldConfig_HasManyRelationEditor::create()
+					)
+				)
+			)
+		);
 
-    $actions = new FieldList();
-    $actions->push(FormAction::create('saveFlatFeeShippingSettings', _t('GridFieldDetailForm.Save', 'Save'))
-      ->setUseButtonTag(true)
-      ->addExtraClass('ss-ui-action-constructive')
-      ->setAttribute('data-icon', 'add'));
+		$actions = new FieldList();
+		$actions->push(FormAction::create('saveFlatFeeShippingSettings', _t('GridFieldDetailForm.Save', 'Save'))
+			->setUseButtonTag(true)
+			->addExtraClass('ss-ui-action-constructive')
+			->setAttribute('data-icon', 'add'));
 
-    $form = new Form(
-      $this,
-      'EditForm',
-      $fields,
-      $actions
-    );
+		$form = new Form(
+			$this,
+			'EditForm',
+			$fields,
+			$actions
+		);
 
-    $form->setTemplate('ShopAdminSettings_EditForm');
-    $form->setAttribute('data-pjax-fragment', 'CurrentForm');
-    $form->addExtraClass('cms-content cms-edit-form center ss-tabset');
-    if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
-    $form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'FlatFeeShipping/FlatFeeShippingSettingsForm'));
+		$form->setTemplate('ShopAdminSettings_EditForm');
+		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
+		$form->addExtraClass('cms-content cms-edit-form center ss-tabset');
+		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+		$form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'FlatFeeShipping/FlatFeeShippingSettingsForm'));
 
-    $form->loadDataFrom($shopConfig);
+		$form->loadDataFrom($shopConfig);
 
-    return $form;
-  }
+		return $form;
+	}
 
-  public function saveFlatFeeShippingSettings($data, $form) {
+	public function saveFlatFeeShippingSettings($data, $form) {
 
-    //Hack for LeftAndMain::getRecord()
-    self::$tree_class = 'ShopConfig';
+		//Hack for LeftAndMain::getRecord()
+		self::$tree_class = 'ShopConfig';
 
-    $config = ShopConfig::get()->First();
-    $form->saveInto($config);
-    $config->write();
-    $form->sessionMessage('Saved Flat Fee Shipping Settings', 'good');
+		$config = ShopConfig::get()->First();
+		$form->saveInto($config);
+		$config->write();
+		$form->sessionMessage('Saved Flat Fee Shipping Settings', 'good');
 
-    $controller = $this;
-    $responseNegotiator = new PjaxResponseNegotiator(
-      array(
-        'CurrentForm' => function() use(&$controller) {
-          //return $controller->renderWith('ShopAdminSettings_Content');
-          return $controller->FlatFeeShippingSettingsForm()->forTemplate();
-        },
-        'Content' => function() use(&$controller) {
-          //return $controller->renderWith($controller->getTemplatesWithSuffix('_Content'));
-        },
-        'Breadcrumbs' => function() use (&$controller) {
-          return $controller->renderWith('CMSBreadcrumbs');
-        },
-        'default' => function() use(&$controller) {
-          return $controller->renderWith($controller->getViewer('show'));
-        }
-      ),
-      $this->response
-    ); 
-    return $responseNegotiator->respond($this->getRequest());
-  }
+		$controller = $this;
+		$responseNegotiator = new PjaxResponseNegotiator(
+			array(
+				'CurrentForm' => function() use(&$controller) {
+					//return $controller->renderWith('ShopAdminSettings_Content');
+					return $controller->FlatFeeShippingSettingsForm()->forTemplate();
+				},
+				'Content' => function() use(&$controller) {
+					//return $controller->renderWith($controller->getTemplatesWithSuffix('_Content'));
+				},
+				'Breadcrumbs' => function() use (&$controller) {
+					return $controller->renderWith('CMSBreadcrumbs');
+				},
+				'default' => function() use(&$controller) {
+					return $controller->renderWith($controller->getViewer('show'));
+				}
+			),
+			$this->response
+		); 
+		return $responseNegotiator->respond($this->getRequest());
+	}
 
-  public function getSnippet() {
+	public function getSnippet() {
 
-    if (!$member = Member::currentUser()) return false;
-    if (!Permission::check('CMS_ACCESS_' . get_class($this), 'any', $member)) return false;
+		if (!$member = Member::currentUser()) return false;
+		if (!Permission::check('CMS_ACCESS_' . get_class($this), 'any', $member)) return false;
 
-    return $this->customise(array(
-      'Title' => 'Flat Fee Shipping Management',
-      'Help' => 'Create flat fee shipping rates',
-      'Link' => Controller::join_links($this->Link('ShopConfig'), 'FlatFeeShipping'),
-      'LinkTitle' => 'Edit flat fee shipping rates'
-    ))->renderWith('ShopAdmin_Snippet');
-  }
+		return $this->customise(array(
+			'Title' => 'Flat Fee Shipping Management',
+			'Help' => 'Create flat fee shipping rates',
+			'Link' => Controller::join_links($this->Link('ShopConfig'), 'FlatFeeShipping'),
+			'LinkTitle' => 'Edit flat fee shipping rates'
+		))->renderWith('ShopAdmin_Snippet');
+	}
 
 }
