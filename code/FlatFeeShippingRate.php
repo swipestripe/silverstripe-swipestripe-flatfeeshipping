@@ -8,7 +8,7 @@
  * @package swipestripe
  * @subpackage shipping
  */
-class FlatFeeShippingRate extends DataObject {
+class FlatFeeShippingRate extends DataObject implements PermissionProvider {
 	
 	/**
 	 * Fields for this tax rate
@@ -40,32 +40,27 @@ class FlatFeeShippingRate extends DataObject {
 		'Country.Title' => 'Country'
 	);
 
-    public function providePermissions()
-    {
-        return array(
-            'EDIT_FLATFEESHIPPING' => 'Edit Flat Fee Shipping',
-        );
-    }
+	public function providePermissions() {
+		return array(
+			'EDIT_FLATFEESHIPPING' => 'Edit Flat Fee Shipping',
+		);
+	}
 
-    public function canEdit($member = null)
-    {
-        return Permission::check('EDIT_FLATFEESHIPPING');
-    }
+	public function canEdit($member = null) {
+		return Permission::check('EDIT_FLATFEESHIPPING');
+	}
 
-    public function canView($member = null)
-    {
-        return true;
-    }
+	public function canView($member = null) {
+		return true;
+	}
 
-    public function canDelete($member = null)
-    {
-        return Permission::check('EDIT_FLATFEESHIPPING');
-    }
+	public function canDelete($member = null) {
+		return Permission::check('EDIT_FLATFEESHIPPING');
+	}
 
-    public function canCreate($member = null)
-    {
-        return Permission::check('EDIT_FLATFEESHIPPING');
-    }
+	public function canCreate($member = null) {
+		return Permission::check('EDIT_FLATFEESHIPPING');
+	}
 	
 	/**
 	 * Field for editing a {@link FlatFeeShippingRate}.
