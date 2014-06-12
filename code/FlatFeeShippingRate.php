@@ -39,6 +39,33 @@ class FlatFeeShippingRate extends DataObject {
 		'SummaryOfPrice' => 'Amount',
 		'Country.Title' => 'Country'
 	);
+
+    public function providePermissions()
+    {
+        return array(
+            'EDIT_FLATFEESHIPPING' => 'Edit Flat Fee Shipping',
+        );
+    }
+
+    public function canEdit($member = null)
+    {
+        return Permission::check('EDIT_FLATFEESHIPPING');
+    }
+
+    public function canView($member = null)
+    {
+        return true;
+    }
+
+    public function canDelete($member = null)
+    {
+        return Permission::check('EDIT_FLATFEESHIPPING');
+    }
+
+    public function canCreate($member = null)
+    {
+        return Permission::check('EDIT_FLATFEESHIPPING');
+    }
 	
 	/**
 	 * Field for editing a {@link FlatFeeShippingRate}.
