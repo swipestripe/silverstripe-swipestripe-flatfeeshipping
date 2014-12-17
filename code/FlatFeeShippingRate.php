@@ -116,6 +116,9 @@ class FlatFeeShippingRate extends DataObject {
 		$amount->setAmount($this->Price);
 		$amount->setCurrency($shopConfig->BaseCurrency);
 		$amount->setSymbol($shopConfig->BaseCurrencySymbol);
+		
+		$this->extend('updateAmount', $amount);
+		
 		return $amount;
 	}
 
