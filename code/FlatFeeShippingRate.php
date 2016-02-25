@@ -112,7 +112,7 @@ class FlatFeeShippingRate extends DataObject {
 
 		$shopConfig = ShopConfig::current_shop_config();
 
-		$amount = new Price();
+		$amount = Price::create();
 		$amount->setAmount($this->Price);
 		$amount->setCurrency($shopConfig->BaseCurrency);
 		$amount->setSymbol($shopConfig->BaseCurrencySymbol);
